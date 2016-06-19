@@ -1,0 +1,31 @@
+---
+
+# RIDING BYTES specific NGINX configuration
+nginx_path: "/etc/nginx"
+nginx_conf: "{{ nginx_path }}/nginx.conf"
+nginx_sites_available: "{{ nginx_path }}/sites-available"
+nginx_sites_enabled: "{{ nginx_path }}/sites-enabled"
+nginx_extra_http_options: |
+  proxy_read_timeout 600s;
+
+# Odoo VHOSTS
+odoo_vhosts:
+  - server_name: "_"
+    file_name: "default"
+    backend: "odoo"
+
+nginx_upstreams:
+  - name: odoo
+    strategy: "ip_hash" # "least_conn", etc.
+    servers: {
+      "127.0.0.1:8069"
+    }
+
+# SSL
+ssl_certificate: /etc/ssl/certs/ssl-cert-snakeoil.pem
+ssl_certificate_key: /etc/ssl/private/ssl-cert-snakeoil.key
+
+# https://github.com/geerlingguy/ansible-role-nginx
+nginx_remove_default_vhost: true
+nginx_server_names_hash_bucket_size: "256"
+nginx_client_max_body_size: "1024m"

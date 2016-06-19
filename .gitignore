@@ -1,3 +1,4 @@
 .vagrant
 roles/ANXS.postgresql
 roles/sebalix.odoo
+roles/geerlingguy.nginx

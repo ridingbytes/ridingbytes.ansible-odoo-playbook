@@ -1,0 +1,7 @@
+---
+
+# APT update intervals
+apt_update_package_lists: 1
+apt_download_upgradable_packages: 1
+apt_autocleaninterval: 7
+apt_unattended_upgrade: 1

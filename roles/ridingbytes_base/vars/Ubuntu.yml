@@ -1,0 +1,12 @@
+---
+
+packages:
+    - git
+    - htop
+    - screen
+    - tree
+    - lynx
+    - acl
+
+apt_periodic: yes
+apt_conf_dir: "/etc/apt/apt.conf.d"

@@ -1,0 +1,46 @@
+---
+
+- name: Fail if Ansible version is too old
+  fail: msg="Ansible version too old, please update your kit. 'pip install -U Ansible'"
+  when: ansible_version.major < 2
+
+- name: Setting variables for Distribution <{{ ansible_distribution }}>
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "../vars/{{ ansible_distribution }}.yml"
+  tags:
+    - base
+    - apt
+
+- name: Update APT package cache
+  action: apt update_cache=yes
+  tags:
+    - base
+    - apt
+
+- name: Upgrade APT to the lastest packages
+  action: apt upgrade=full
+  tags:
+    - base
+    - apt
+
+- name: Install packages for Distribution <{{ ansible_distribution }}>
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  with_items: "{{ packages }}"
+  tags:
+    - base
+    - apt
+
+- name: Adjust APT update intervals
+  template:
+    src: 10periodic.j2
+    dest: "{{apt_conf_dir}}/10periodic"
+    owner: root
+    group: root
+    mode: 0644
+  when: "{{ apt_periodic }}"
+  tags:
+    - base
+    - apt

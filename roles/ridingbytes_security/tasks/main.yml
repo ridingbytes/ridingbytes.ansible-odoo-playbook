@@ -1,1 +1,48 @@
 ---
+
+- name: Install Postfix
+  apt:
+    pkg:
+      - postfix
+      - logwatch
+    state: installed
+
+- name: Deploy SSH Public Keys to -> {{ ansible_ssh_user }}
+  authorized_key:
+      user="{{ ansible_ssh_user }}"
+      key="{{ item }}"
+  with_items: "{{ ssh_authorized_keys }}"
+  ignore_errors: False
+  become: yes
+  become_user: "{{ ansible_ssh_user }}"
+  register: ssh_public_keys
+
+- name: Set up Postfix
+  debconf:
+    name: postfix
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
+  with_items:
+    - question: 'postfix/mailname'
+      value: '{{ ansible_fqdn }}'
+      vtype: 'string'
+    - question: 'postfix/main_mailer_type'
+      value: 'Internet Site'
+      vtype: 'string'
+
+- name: Disallow password authentication
+  lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PasswordAuthentication"
+              line="PasswordAuthentication no"
+              state=present
+  notify: restart ssh
+  when: disallow_password_authentication and ssh_public_keys
+
+- name: Disallow root SSH access
+  lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PermitRootLogin"
+              line="PermitRootLogin no"
+              state=present
+  notify: restart ssh
+  when: disallow_root_ssh_login and ssh_public_keys

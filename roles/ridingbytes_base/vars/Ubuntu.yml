@@ -1,6 +1,7 @@
 ---
 
 packages:
+    - zip
     - git
     - htop
     - screen

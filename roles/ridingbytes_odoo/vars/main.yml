@@ -44,4 +44,5 @@ odoo_config_addons_path:
   - "/home/{{ odoo_user }}/odoo/server/openerp/addons"
   - "/home/{{ odoo_user }}/odoo/server/addons"
   - "{{ odoo_custom_addons_path }}"
+odoo_config_logrotate: True
 

@@ -1,8 +1,11 @@
 ---
 
+admin_email: "administrator@ridingbytes.com"
+
+logwatch_email: "{{ admin_email }}"
 firewall_open_tcp_ports: [80, 443]
 firewall_use_fail2ban: yes
-firewall_fail2ban_destemail: 'administrator@ridingbytes.com'
+firewall_fail2ban_destemail: "{{ admin_email }}"
 
 firewall_fail2ban_jails:
   - section: odoo

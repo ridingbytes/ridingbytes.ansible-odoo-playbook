@@ -3,6 +3,12 @@
 - name: Install Logwatch
   apt: pkg=logwatch state=installed
 
+- name: Email log summary daily
+  lineinfile: dest=/etc/cron.daily/00logwatch
+              regexp="^/usr/sbin/logwatch"
+              line="/usr/sbin/logwatch --output mail --mailto {{ logwatch_email }} --detail high"
+              state=present create=yes
+
 - name: Deploy SSH Public Keys to -> {{ ansible_ssh_user }}
   authorized_key:
       user="{{ ansible_ssh_user }}"

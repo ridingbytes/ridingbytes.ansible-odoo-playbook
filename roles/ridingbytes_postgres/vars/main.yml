@@ -1,0 +1,21 @@
+---
+
+# Using a modern PostgreSQL version
+postgresql_version: 9.5
+
+# Setup up host based authentication.
+# Allow only local connections to the Unix-domain socket.
+# Note: connecting user must be a local user on the system.
+postgresql_pg_hba_default:
+  - type: local
+    database: all
+    user: '{{ postgresql_admin_user }}'
+    address: ''
+    method: 'peer'
+    comment: ''
+  - type: local
+    database: all
+    user: all
+    address: ''
+    method: 'peer'
+    comment: '"local" is for Unix domain socket connections only'

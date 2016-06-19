@@ -12,18 +12,16 @@ if [ $DB ]
 then
     echo "USING DB $DB"
 else
-    databases=
     select db in {{ odoo_databases | join(" ") }}; do test -n "$db" && break; error_exit "Invalid selection"; done
     echo "Backup Database: $db"
     export DB=$db
 fi
 
-
 BASE_DIR="/home/{{ odoo_user }}"
 FS_DIR="{{ odoo_config_data_dir }}/filestore/$DB"
 BACKUP_BASE_DIR="{{ odoo_backup_dir }}"
 DATE=`date +"%Y-%m-%d_%H%M%N"`
-ARCHIVE=`find $BACKUP_BASE_DIR -maxdepth 1 -mindepth 1 -type f -printf '%f\n' | sort -n | tail -1`
+ARCHIVE=`find $BACKUP_BASE_DIR -maxdepth 1 -mindepth 1 -type f -printf '%f\n' | egrep -i $DB | sort -n | tail -1`
 BACKUP=$BACKUP_BASE_DIR/$ARCHIVE
 SNAPSHOT_DB="$DB.dump"
 SNAPSHOT_FS="$DB-filestorage"
@@ -75,7 +73,9 @@ case $x in
     # echo "OK"
 
     echo "CLEANING UP"
+    cd $BASE_DIR
     backup=`basename $BACKUP .zip`
+    echo "Deleting $backup"
     rm -rf $backup
     echo "OK"
 

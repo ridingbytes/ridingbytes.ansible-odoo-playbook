@@ -18,23 +18,35 @@ else
     export DB=$db
 fi
 
-BASE_DIR="/home/{{ odoo_user }}"
-FS_DIR="{{ odoo_config_data_dir }}/filestore/$DB"
-DATE=`date +"%Y-%m-%d_%H%M%N"`
-BACKUP_NAME="$DB-$DATE"
+# Backups are located in this directory
 BACKUP_BASE_DIR="{{ odoo_backup_dir }}"
+# File Data is located in this directory
+FS_DIR="{{ odoo_config_data_dir }}/filestore/$DB"
+# Generate a Timestamp
+DATE=`date +"%Y-%m-%d_%H%M%N"`
+# Generate a Name for the Backup
+BACKUP_NAME="$DB-$DATE"
+# Folder name of the backup
 BACKUP_DIR="$BACKUP_BASE_DIR/$BACKUP_NAME"
 SNAPSHOT_DB="$DB.dump"
 SNAPSHOT_FS="$DB-filestorage"
 
 # CREATE BACKUP
 echo "Creating Snapshot for Database $DB"
+
+# 1. Create a directory for the backup
 mkdir -p $BACKUP_DIR
+
+# 2. Copy File Data to the directory
 cp -r $FS_DIR $BACKUP_DIR/$SNAPSHOT_FS
+
+# 3. Make a Database dump with `pg_dump`
 pg_dump -E UTF-8 -Fc -b -f $BACKUP_DIR/$SNAPSHOT_DB $DB
 
+# 4. Pack the new directory and remove it afterwards
 cd $BACKUP_BASE_DIR
 zip -r -q -9 $BACKUP_NAME.zip $BACKUP_NAME
 rm -rf $BACKUP_NAME
 
+echo "Backup $BACKUP_NAME.zip created"
 exit 0

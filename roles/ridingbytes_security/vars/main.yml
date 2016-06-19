@@ -2,9 +2,7 @@
 
 firewall_open_tcp_ports: [80, 443]
 firewall_use_fail2ban: yes
-
-disallow_password_authentication: yes
-disallow_root_ssh_login: yes
+firewall_fail2ban_destemail: 'administrator@ridingbytes.com'
 
 firewall_fail2ban_jails:
   - section: odoo
@@ -15,6 +13,9 @@ firewall_fail2ban_jails:
     maxretry: 30
     findtime: 10800
     bantime: 86400
+
+disallow_password_authentication: yes
+disallow_root_ssh_login: yes
 
 # RSA Public Keys
 ssh_authorized_keys:

@@ -14,4 +14,5 @@
     - role: ridingbytes_postgres
     - role: ridingbytes_odoo
     - role: ridingbytes_nginx
+    - role: ridingbytes_mail
     - role: ridingbytes_security

@@ -1,0 +1,9 @@
+---
+
+postfix_inet_interfaces: loopback-only
+postfix_aliases:
+  - { user: root, alias: administrator@ridingbytes.com }
+postfix_relayhost: wpXXX.webpack.hosteurope.de
+postfix_relaytls: true
+postfix_sasl_user:
+postfix_sasl_password:

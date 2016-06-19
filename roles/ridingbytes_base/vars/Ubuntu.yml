@@ -7,7 +7,6 @@ packages:
     - screen
     - tree
     - lynx
-    - mail-utils
     - acl
 
 apt_periodic: yes

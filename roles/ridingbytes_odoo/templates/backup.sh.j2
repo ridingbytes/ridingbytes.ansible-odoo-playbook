@@ -1,0 +1,40 @@
+#!/bin/bash
+
+PROGNAME=$(basename $0)
+DB=$1
+
+function error_exit {
+    echo "$PROGNAME: ${1:-"Unknown Error"}" 1>&2
+    exit 1
+}
+
+if [ $DB ]
+then
+    echo "USING DB $DB"
+else
+    databases=
+    select db in {{ odoo_databases | join(" ") }}; do test -n "$db" && break; error_exit "Invalid selection"; done
+    echo "Backup Database: $db"
+    export DB=$db
+fi
+
+BASE_DIR="/home/{{ odoo_user }}"
+FS_DIR="{{ odoo_config_data_dir }}/filestore/$DB"
+DATE=`date +"%Y-%m-%d_%H%M%N"`
+BACKUP_NAME="$DB-$DATE"
+BACKUP_BASE_DIR="{{ odoo_backup_dir }}"
+BACKUP_DIR="$BACKUP_BASE_DIR/$BACKUP_NAME"
+SNAPSHOT_DB="$DB.dump"
+SNAPSHOT_FS="$DB-filestorage"
+
+# CREATE BACKUP
+echo "Creating Snapshot for Database $DB"
+mkdir -p $BACKUP_DIR
+cp -r $FS_DIR $BACKUP_DIR/$SNAPSHOT_FS
+pg_dump -E UTF-8 -Fc -b -f $BACKUP_DIR/$SNAPSHOT_DB $DB
+
+cd $BACKUP_BASE_DIR
+zip -r -q -9 $BACKUP_NAME.zip $BACKUP_NAME
+rm -rf $BACKUP_NAME
+
+exit 0

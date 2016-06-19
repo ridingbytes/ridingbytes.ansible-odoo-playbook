@@ -1,0 +1,89 @@
+#!/bin/bash
+
+PROGNAME=$(basename $0)
+DB=$1
+
+function error_exit {
+    echo "$PROGNAME: ${1:-"Unknown Error"}" 1>&2
+    exit 1
+}
+
+if [ $DB ]
+then
+    echo "USING DB $DB"
+else
+    databases=
+    select db in {{ odoo_databases | join(" ") }}; do test -n "$db" && break; error_exit "Invalid selection"; done
+    echo "Backup Database: $db"
+    export DB=$db
+fi
+
+
+BASE_DIR="/home/{{ odoo_user }}"
+FS_DIR="{{ odoo_config_data_dir }}/filestore/$DB"
+BACKUP_BASE_DIR="{{ odoo_backup_dir }}"
+DATE=`date +"%Y-%m-%d_%H%M%N"`
+ARCHIVE=`find $BACKUP_BASE_DIR -maxdepth 1 -mindepth 1 -type f -printf '%f\n' | sort -n | tail -1`
+BACKUP=$BACKUP_BASE_DIR/$ARCHIVE
+SNAPSHOT_DB="$DB.dump"
+SNAPSHOT_FS="$DB-filestorage"
+
+if [ ! -z "$1" ]; then
+  BACKUP=$1
+  echo "USING $1"
+fi
+
+if [ ! -e $BACKUP ]; then
+  echo "No backup to restore found"
+  exit -1
+fi
+
+echo "This will restore the Database $DB with the backup from $BACKUP"
+echo "THIS WILL DROP THE CURRENT DATABASE BEFORE RESTORE! Continue? [N/y]"
+read -p "> " x
+
+case $x in
+  ["y"]*)
+
+    # echo "STOPPING ODOO"
+    # sudo service odoo stop
+    # echo "OK"
+
+    echo "DROPPING DATABASE $DB"
+    dropdb $DB
+    createdb $DB
+    echo "OK"
+
+    echo "EXTRACTING $BACKUP"
+    unzip -q $BACKUP
+    backup=`basename $BACKUP .zip`
+    cd $backup
+    echo "OK"
+
+    echo "RESTORING DATABASE"
+    pg_restore -d $DB $SNAPSHOT_DB
+    echo "OK"
+
+    echo "RESTORING FILESTORAGE"
+    mv $FS_DIR $FS_DIR/../$DB_$DATE
+    mkdir -p $FS_DIR
+    cp -r $SNAPSHOT_FS/* $FS_DIR
+    echo "OK"
+
+    # echo "RESTARTING ODOO"
+    # sudo service odoo start
+    # echo "OK"
+
+    echo "CLEANING UP"
+    backup=`basename $BACKUP .zip`
+    rm -rf $backup
+    echo "OK"
+
+    echo "BACKUP $backup FULLY RESTORED! GOING HOME..."
+  ;;
+  *)
+    echo "ABORTED"
+  ;;
+esac
+
+exit 0

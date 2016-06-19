@@ -1,0 +1,63 @@
+---
+
+- name: Ensure /home/{{ odoo_user}}/bin directory
+  file:
+    path: "/home/{{ odoo_user }}/bin"
+    state: directory
+    owner: "{{ odoo_user }}"
+    group: "{{ odoo_user }}"
+  tags:
+    - odoo-base
+
+- name: Ensure /home/{{ odoo_user}}/addons directory
+  file:
+    path: "{{ odoo_custom_addons_path }}"
+    state: directory
+    owner: "{{ odoo_user }}"
+    group: "{{ odoo_user }}"
+  tags:
+    - odoo-base
+
+- name: Clone Custom Addons
+  become: yes
+  become_user: "{{ odoo_user }}"
+  git:  repo={{ item.url }}
+        dest="{{ odoo_custom_addons_path }}/{{ item.dest }}"
+        version={{ item.version | string }}
+        accept_hostkey=True
+        depth=1
+  with_items: "{{ odoo_custom_addons }}"
+  when: odoo_repo_type == 'git' and odoo_repo_url
+  tags:
+    - odoo-addons
+    - odoo-base
+
+- name: Create Backup Script
+  template:
+    src: backup.sh.j2
+    dest: "/home/{{ odoo_user }}/bin/backup.sh"
+    owner: "{{ odoo_user }}"
+    group: "{{ odoo_user }}"
+    mode: 0700
+  tags:
+    - odoo-base
+
+- name: Create Restore Script
+  template:
+    src: restore.sh.j2
+    dest: "/home/{{ odoo_user }}/bin/restore.sh"
+    owner: "{{ odoo_user }}"
+    group: "{{ odoo_user }}"
+    mode: 0700
+  tags:
+    - odoo-base
+
+- name: Create Cleanup Script
+  template:
+    src: cleanup.sh.j2
+    dest: "/home/{{ odoo_user }}/bin/cleanup.sh"
+    owner: "{{ odoo_user }}"
+    group: "{{ odoo_user }}"
+    mode: 0700
+  tags:
+    - odoo-base

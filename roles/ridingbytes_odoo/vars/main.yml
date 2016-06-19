@@ -1,0 +1,26 @@
+---
+
+# RIDING BYTES Extra Config
+odoo_custom_addons_path: "/home/{{ odoo_user }}/addons"
+odoo_custom_addons:
+  - url: https://github.com/OCA/product-attribute.git
+    version: "9.0"
+    dest: "product-attribute"
+  - url: https://github.com/lukebranch/website_multi_image.git
+    version: master
+    dest: "website_multi_image"
+
+odoo_databases:
+  - testing
+  - productive
+odoo_backup_dir: "/home/{{ odoo_user }}/backup"
+odoo_keep_backups: 30
+
+# Odoo ROLE Config
+odoo_service: odoo
+odoo_version: 9.0
+odoo_repo_rev: "saas-9"
+odoo_config_addons_path:
+  - "/home/{{ odoo_user }}/odoo/server/openerp/addons"
+  - "/home/{{ odoo_user }}/odoo/server/addons"
+  - "{{ odoo_custom_addons_path }}"

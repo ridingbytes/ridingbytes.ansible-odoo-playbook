@@ -1,0 +1,20 @@
+#!/bin/bash
+
+DAYS={{ odoo_keep_backups }}
+BASEDIR="/home/{{ odoo_user }}"
+BACKUPDIR="{{ odoo_backup_dir }}"
+LOG="$BASEDIR/cleanup.log"
+
+echo "Cleaning up"
+
+if [ -e $LOG ]; then
+  rm $LOG
+fi
+
+for file in `find $BACKUPDIR -mindepth 1 -maxdepth 1 -mtime +$DAYS -type f`
+do
+  echo "Deleting: $file" >> $LOG
+  rm $file
+done
+
+exit 0

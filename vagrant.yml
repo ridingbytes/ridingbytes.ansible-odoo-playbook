@@ -1,0 +1,15 @@
+---
+
+- hosts: odoo
+  become: yes
+  gather_facts: yes
+  pre_tasks:
+    - name: Include Vagrant Variables `vagrant_configure.yml`
+      include_vars: vagrant_configure.yml
+      tags:
+        - always
+
+  roles:
+    - role: ridingbytes_base
+    - role: ridingbytes_postgres
+    - role: ridingbytes_odoo

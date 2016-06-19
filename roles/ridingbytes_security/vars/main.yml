@@ -16,6 +16,14 @@ firewall_fail2ban_jails:
     maxretry: 30
     findtime: 10800
     bantime: 86400
+    action: "ufw \n sendmail-whois-lines[name=Odoo, logpath=/var/log/fail2ban.log]"
+  - section: ssh
+    enabled: true
+    filter: sshd
+    port: ssh
+    logpath: /var/log/auth.log
+    maxretry: 6
+    action: "ufw \n sendmail-whois-lines[name=SSH, logpath=/var/log/fail2ban.log]"
 
 disallow_password_authentication: yes
 disallow_root_ssh_login: yes

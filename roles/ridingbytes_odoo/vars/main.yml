@@ -11,10 +11,20 @@ odoo_custom_addons:
     dest: "website_multi_image"
 
 odoo_databases:
-  - testing
   - productive
 odoo_backup_dir: "/home/{{ odoo_user }}/backup"
 odoo_keep_backups: 30
+odoo_backup_at:
+  - name: "Backup for Productive Database"
+    weekday: "*"
+    hour: 2
+    minute: 00
+    command: "cd /home/{{ odoo_user }} && bin/backup.sh productive"
+  - name: "Clean Up"
+    weekday: "*"
+    hour: 3
+    minute: 00
+    command: "cd /home/{{ odoo_user }} && bin/cleanup.sh"
 
 # Odoo ROLE Config
 odoo_service: odoo

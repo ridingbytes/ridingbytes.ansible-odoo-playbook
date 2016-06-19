@@ -61,3 +61,20 @@
     mode: 0700
   tags:
     - odoo-base
+
+###################################
+# cron jobs
+
+- name: Backup cron job
+  when: odoo_backup_at
+  cron:
+    name: "{{ item.name }}"
+    weekday: "{{ item.weekday }}"
+    hour: "{{ item.hour }}"
+    minute: "{{ item.minute }}"
+    user: "{{ odoo_user }}"
+    job: '{{ item.command }}'
+  with_items: "{{ odoo_backup_at }}"
+  tags:
+    - odoo-base
+    - odoo-cron

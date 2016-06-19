@@ -1,14 +1,24 @@
 ---
 
+# User Passwords
+# http://docs.ansible.com/ansible/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
+# To generate a Password, do the follwing steps:
+# pip install passlib
+# python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"
+odoo_user_passwd: $6$rounds=656000$sRJuD34g9L7oMoFf$EVF3YkLg9kreuZK2IAXDrOd/zTlCLY5lguOp/qRJ6j4jDAfOKRkHM3nRq9wxutwevVJHd1dx4KgHm2YPfc1xw1
+odoo_config_db_passwd: False
+
 # RIDING BYTES Extra Config
 odoo_custom_addons_path: "/home/{{ odoo_user }}/addons"
-odoo_custom_addons:
-  - url: https://github.com/OCA/product-attribute.git
-    version: "9.0"
-    dest: "product-attribute"
-  - url: https://github.com/lukebranch/website_multi_image.git
-    version: master
-    dest: "website_multi_image"
+odoo_custom_addons: []
+# Example:
+#  - url: https://github.com/OCA/product-attribute.git
+#    version: "9.0"
+#    dest: "product-attribute"
+#  - url: https://github.com/lukebranch/website_multi_image.git
+#    version: master
+#    dest: "website_multi_image"
+# Please add subdirectories to odoo_custom_addons_path as well
 
 odoo_databases:
   - productive
@@ -34,3 +44,4 @@ odoo_config_addons_path:
   - "/home/{{ odoo_user }}/odoo/server/openerp/addons"
   - "/home/{{ odoo_user }}/odoo/server/addons"
   - "{{ odoo_custom_addons_path }}"
+

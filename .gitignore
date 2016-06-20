@@ -4,3 +4,4 @@ roles/sebalix.odoo
 roles/geerlingguy.nginx
 roles/HanXHX.firewall
 roles/tersmitten.postfix/
+.vault_pass.txt

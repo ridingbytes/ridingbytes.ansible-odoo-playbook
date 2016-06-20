@@ -9,14 +9,14 @@
               line="/usr/sbin/logwatch --output mail --mailto {{ logwatch_email }} --detail high"
               state=present create=yes
 
-- name: Deploy SSH Public Keys to -> {{ ansible_ssh_user }}
+- name: Deploy SSH Public Keys to -> {{ ansible_user }}
   authorized_key:
-      user="{{ ansible_ssh_user }}"
+      user="{{ ansible_user }}"
       key="{{ item }}"
   with_items: "{{ ssh_authorized_keys }}"
   ignore_errors: False
   become: yes
-  become_user: "{{ ansible_ssh_user }}"
+  become_user: "{{ ansible_user }}"
   register: ssh_public_keys
 
 - name: Disallow password authentication

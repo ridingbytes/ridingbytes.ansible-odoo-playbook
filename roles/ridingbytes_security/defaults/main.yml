@@ -1,0 +1,13 @@
+---
+admin_email: "administrator@ridingbytes.com"
+
+logwatch_email: "{{ admin_email }}"
+
+disallow_password_authentication: yes
+disallow_root_ssh_login: yes
+
+# RSA Public Keys
+ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC63AC+dDO/BpASggi6Q+Tid3YH65JmI7eNS6gLjDL65N/LgxiDRniM7fF3RfrxoykCyEgFAIxWLQszIxvybbpwW16cpq5YrshBQ4eFxJ3/b2QhMH2lJzJoYi9RpLCILwp5qKCgX2ESURHEp+XJkRIdS3vk5nZZTQwWukjl2tQzF4kGpkGFoz+qnm6/00T8wdXJRnYZmRMVlXgfU+h0OhaO3EMNIlAPoY66liLMsHsiLfZyIkNjrSM07U/oMKcT2fmVeFnFvKO7TvWGgAXJrwl+bLlPb2NvCURFBd67w/i679YqvGUcd52If2j+ugy1KBrXX3FM+smY/ZlDh8UegA7B RIDING BYTES
+
+

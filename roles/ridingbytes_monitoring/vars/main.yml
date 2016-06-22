@@ -1,0 +1,6 @@
+---
+
+agent_server: zabbix.ridingbytes.com
+agent_serveractive: zabbix.ridingbytes.com
+agent_enableremotecommands: 1
+agent_logremotecommands: 1

@@ -6,3 +6,4 @@ roles/HanXHX.firewall
 roles/tersmitten.postfix/
 .vault_pass.txt
 customers
+roles/dj-wasabi.zabbix-agent

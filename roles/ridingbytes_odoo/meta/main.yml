@@ -2,3 +2,5 @@
 
 dependencies:
   - role: sebalix.odoo
+    tags:
+      - odoo

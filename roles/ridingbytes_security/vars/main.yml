@@ -5,20 +5,20 @@ firewall_reset: yes
 firewall_open_tcp_ports: [80, 443]
 firewall_use_fail2ban: yes
 firewall_fail2ban_destemail: "{{ admin_email }}"
-firewall_fail2ban_jails:
-  - section: odoo
-    enabled: true
-    filter: odoo
-    port: http,https
-    logpath: /var/log/nginx/*.access.log
-    maxretry: 30
-    findtime: 10800
-    bantime: 86400
-    action: "ufw \n sendmail-whois-lines[name=Odoo, logpath=/var/log/fail2ban.log]"
-  - section: ssh
-    enabled: true
-    filter: sshd
-    port: ssh
-    logpath: /var/log/auth.log
-    maxretry: 6
-    action: "ufw \n sendmail-whois-lines[name=SSH, logpath=/var/log/fail2ban.log]"
+#firewall_fail2ban_jails:
+#  - section: odoo
+#    enabled: true
+#    filter: odoo
+#    port: http,https
+#    logpath: /var/log/nginx/*.access.log
+#    maxretry: 30
+#    findtime: 10800
+#    bantime: 86400
+#    action: "ufw \n sendmail-whois-lines[name=Odoo, logpath=/var/log/fail2ban.log]"
+#  - section: ssh
+#    enabled: true
+#    filter: sshd
+#    port: ssh
+#    logpath: /var/log/auth.log
+#    maxretry: 6
+#    action: "ufw \n sendmail-whois-lines[name=SSH, logpath=/var/log/fail2ban.log]"

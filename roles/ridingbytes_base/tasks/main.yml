@@ -14,12 +14,14 @@
 
 - name: Update APT package cache
   action: apt update_cache=yes
+  when: "{{ apt_update_on_play }}"
   tags:
     - base
     - apt
 
 - name: Upgrade APT to the lastest packages
   action: apt upgrade=full
+  when: "{{ apt_upgrade_on_play }}"
   tags:
     - base
     - apt

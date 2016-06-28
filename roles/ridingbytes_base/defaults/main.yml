@@ -5,3 +5,7 @@ apt_update_package_lists: 1
 apt_download_upgradable_packages: 1
 apt_autocleaninterval: 7
 apt_unattended_upgrade: 1
+
+# switch to enable/disable apt-get update && apt-get upgrade
+apt_update_on_play: yes
+apt_upgrade_on_play: yes

@@ -13,21 +13,36 @@
   file:
     path: "{{ odoo_custom_addons_path }}"
     state: directory
-    owner: "{{ odoo_user }}"
+    owner: "{{ ansible_user }}"
     group: "{{ odoo_user }}"
+    recurse: yes
   tags:
+    - odoo-addons
     - odoo-base
 
+# Note: We use `ansible_uesr` to allow SSH Agent Forwarding
+# https://developer.github.com/guides/using-ssh-agent-forwarding/
 - name: Clone Custom Addons
   become: yes
-  become_user: "{{ odoo_user }}"
+  become_user: "{{ ansible_user }}"
   git:  repo={{ item.url }}
         dest="{{ odoo_custom_addons_path }}/{{ item.dest }}"
         version={{ item.version | string }}
         accept_hostkey=True
         depth=1
+        ssh_opts="-o ForwardAgent=yes"
   with_items: "{{ odoo_custom_addons }}"
   when: odoo_repo_type == 'git' and odoo_repo_url
+  tags:
+    - odoo-addons
+    - odoo-base
+
+- name: Fix /home/{{ odoo_user}}/addons permissions
+  file:
+    path: "{{ odoo_custom_addons_path }}"
+    owner: "{{ odoo_user }}"
+    group: "{{ odoo_user }}"
+    recurse: yes
   tags:
     - odoo-addons
     - odoo-base

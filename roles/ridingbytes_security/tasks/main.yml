@@ -35,6 +35,13 @@
   notify: restart ssh
   when: disallow_root_ssh_login and ssh_public_keys
 
+- name: Set SSH Port
+  lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^Port"
+              line="Port {{ ssh_port }}"
+              state=present
+  notify: restart ssh
+
 - name: Deploy Fail2Ban Odoo Config
   template:
     src: fail2ban_odoo.conf.j2

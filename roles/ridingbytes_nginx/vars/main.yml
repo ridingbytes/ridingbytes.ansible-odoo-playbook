@@ -11,6 +11,8 @@ nginx_extra_http_options: |
 # Odoo VHOSTS
 odoo_vhosts:
   - server_name: "_"
+    server_aliases: []
+    database: "productive"
     file_name: "default"
     backend: "http://odoo"
 

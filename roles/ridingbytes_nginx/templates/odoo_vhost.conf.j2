@@ -1,7 +1,14 @@
 # HTTP VHOST: {{ item.server_name }}
 server {
     listen 80;
-    server_name {{ item.server_name }};
+    server_name {{ item.server_name }} {% for item in item.server_aliases %} {{ item }} {% endfor %};
+
+    {% if item.redirect | default(False) %}
+      # redirect to {{ item.server_name }}
+      if ($host != '{{ item.server_name }}') {
+        return 301 $scheme://{{ item.server_name }}$request_uri;
+      }
+    {% endif %}
 
     # log files
     access_log  /var/log/nginx/{{ item.file_name }}.access.log;
@@ -22,18 +29,25 @@ server {
     }
 
     # cache some static data in memory for 60mins
-    location ~* /web/static/ {
-        proxy_cache_valid 200 60m;
-        proxy_buffering on;
-        expires 864000;
-        proxy_pass {{ item.backend }};
-    }
+    # location ~* /web/static/ {
+    #     proxy_cache_valid 200 60m;
+    #     proxy_buffering on;
+    #     expires 864000;
+    #     proxy_pass {{ item.backend }};
+    # }
 }
 
 # HTTPS VHOST: {{ item.server_name }}
 server {
     listen 443 ssl;
-    server_name {{ item.server_name }};
+    server_name {{ item.server_name }} {% for item in item.server_aliases %} {{ item }} {% endfor %};
+
+    {% if item.redirect | default(False) %}
+      # redirect to {{ item.server_name }}
+      if ($host != '{{ item.server_name }}') {
+        return 301 $scheme://{{ item.server_name }}$request_uri;
+      }
+    {% endif %}
 
     ssl_certificate {{ ssl_certificate }};
     ssl_certificate_key {{ ssl_certificate_key }};
@@ -62,11 +76,10 @@ server {
     }
 
     # cache some static data in memory for 60mins
-    location ~* /web/static/ {
-        proxy_cache_valid 200 60m;
-        proxy_buffering on;
-        expires 864000;
-        proxy_pass {{ item.backend }};
-    }
-
+    # location ~* /web/static/ {
+    #     proxy_cache_valid 200 60m;
+    #     proxy_buffering on;
+    #     expires 864000;
+    #     proxy_pass {{ item.backend }};
+    # }
 }

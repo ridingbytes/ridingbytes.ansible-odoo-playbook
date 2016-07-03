@@ -1,7 +1,7 @@
 ---
 
 agent_listenip: 0.0.0.0
-agent_server: zabbix.ridingbytes.com
-agent_serveractive: zabbix.ridingbytes.com
+agent_server: localhost, zabbix.ridingbytes.com
+agent_serveractive: localhost, zabbix.ridingbytes.com
 agent_enableremotecommands: 1
 agent_logremotecommands: 1

@@ -1,7 +1,7 @@
 # HTTP VHOST: {{ item.server_name }}
 server {
     listen 80;
-    server_name {{ item.server_name }} {% for item in item.server_aliases %} {{ item }} {% endfor %};
+    server_name {{ item.server_name }} {% for alias in item.server_aliases %} {{ alias }} {% if item.generate_www_aliases  %} www.{{ alias }} {% endif %}{% endfor %};
 
     {% if item.redirect | default(False) %}
       # redirect to {{ item.server_name }}

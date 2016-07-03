@@ -29,12 +29,12 @@ server {
     }
 
     # cache some static data in memory for 60mins
-    # location ~* /web/static/ {
-    #     proxy_cache_valid 200 60m;
-    #     proxy_buffering on;
-    #     expires 864000;
-    #     proxy_pass {{ item.backend }};
-    # }
+    location ~* /web/static/ {
+        proxy_cache_valid 200 60m;
+        proxy_buffering on;
+        expires 864000;
+        proxy_pass {{ item.backend }};
+    }
 }
 
 # HTTPS VHOST: {{ item.server_name }}
@@ -76,10 +76,10 @@ server {
     }
 
     # cache some static data in memory for 60mins
-    # location ~* /web/static/ {
-    #     proxy_cache_valid 200 60m;
-    #     proxy_buffering on;
-    #     expires 864000;
-    #     proxy_pass {{ item.backend }};
-    # }
+    location ~* /web/static/ {
+        proxy_cache_valid 200 60m;
+        proxy_buffering on;
+        expires 864000;
+        proxy_pass {{ item.backend }};
+    }
 }
